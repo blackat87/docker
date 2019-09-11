@@ -1,0 +1,24 @@
+mysql-local:
+  image: mysql-local:1.0
+  env_file: ./.env
+  volumes:
+    - "./mysql/init:/docker-entrypoint-initdb.d"
+  restart: always
+
+flask-app:
+  image: flask-app:1.0
+  env_file:
+    - ./.env
+  entrypoint: bash -c "./wait-for-it.sh -t 300 mysql-local:3306 && ./run_app.sh"
+  links:
+   - mysql-local
+
+apache-ws:
+  image: apache-ws:1.0
+  env_file:
+    - ./.env
+  restart: always
+  ports:
+    - "8000:80"
+  links:
+   - flask-app
