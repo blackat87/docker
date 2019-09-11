@@ -1,0 +1,7 @@
+django-app:
+  image: django-app:1.0
+  env_file:
+    - ./.env
+  entrypoint: ./run_app.sh
+  ports:
+    - "8000:8000"
